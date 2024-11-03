@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content="Example to illustrate the capabilities of the Vanillas Cream WebComponent framework." />
+        <script type="importmap">
+         {
+           "imports": {
+             "example": "./example/detailed/src/component/example.js",
+             "wait": "./example/detailed/src/utils/wait.js",
+             "@rnd7/vc": "./vc/src/index.js"
+           }
+         }
+        </script> 
+        <style>
+            vc-example {
+                background-color: #000;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+            }
+        </style>
+      <title>Vanilla-Cream Detailed Example</title>
+    </head>
+    <body>
+        <script type="module">
+            import Example from 'example'
+            import wait from 'wait'
+            import {handleStateEvent, MODIFY_STATE, FETCH} from '@rnd7/vc'
+
+            /* 
+            This example demomstrates the capabilities of vanilla-cream.
+            For a production environment you probably want to load some script file instead of 
+            embedding this code into a html file.
+            In this example the state and fetch events are managed outside the component system.
+            You also might want to choose to make components to automatically intercept fetch
+            and state events by passing construtor arguments to the componet base class. It is up 
+            to you.
+            */
+
+
+            /*
+            In this example a global state is used. You might also use multiple states managed by
+            individual components.
+            The state is mutable! When a reference is changed all components that use this exact
+            reference will update.
+            State changes are propagated using DOM Events. 
+            Every component is responsible for its state and might modify it. It can also dispose
+            its state and subsequently itself.
+            */
+            let state = {
+                title: "OMFG",
+                entries: [
+                    {title: "First Entry"},
+                    {title: "Second Entry"},
+                    {title: "Third Entry"}
+                ]
+            }
+
+            /* 
+            In order to obtain a component instance you use Component.create() method
+            The Component will be automatically registered as WebComponent.
+            The DOM Element returned can be appended to the DOM.
+            In this example the state is passed as create parameter
+            You can also pass options that will be assigned to the component instance before intialization
+            WebComponents cannot be instantiated using the constructor.
+            */
+            const exampleApp = Example.create({state})
+
+            /* Intercept fetch */
+            exampleApp.addEventListener(FETCH, (event)=>{
+                event.stopPropagation()
+                try {
+                    const response = fetch(event.detail.resource, event.detail.options)
+                    event.detail.resolve(response)
+                } catch (error) {
+                    event.detail.reject(error)
+                }
+            })
+
+            /* Intercept state */
+            exampleApp.addEventListener(MODIFY_STATE, (event)=>{
+                event.stopPropagation()
+                state = handleStateEvent(event)
+                exampleApp.updateState(state)
+            })
+
+            /* Append the app to the DOM */
+            document.body.append(exampleApp)
+
+
+            /* Just a timed sequence to show the capabilites of the state management */
+            async function stateModificationSequence() {
+
+                await wait()
+                state = {...state, title: "List"}
+                exampleApp.updateState(state)
+
+                await wait()
+                state.entries[0] = {title: "Fellow"}
+                exampleApp.updateState(state)
+
+                await wait()
+                state.entries = state.entries.slice(0,1)
+                exampleApp.updateState(state)
+            }
+
+            stateModificationSequence()
+        </script>
+    </body>
+</html>

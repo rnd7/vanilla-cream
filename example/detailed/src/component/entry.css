@@ -1,0 +1,12 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    background-color: #001030;
+    overflow: hidden;
+}
+
+vc-input {
+    display: flex;
+    flex: 1;
+}

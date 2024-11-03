@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content="Example to illustrate the capabilities of the Vanillas Cream WebComponent framework." />
+        <script type="importmap">
+         {
+           "imports": {
+             "todo": "./example/todo/src/component/todo.js",
+             "@rnd7/vc": "./vc/src/index.js"
+           }
+         }
+        </script> 
+        <style>
+            body {
+                display: flex;
+                justify-content: center; 
+                background-color: #603262;
+                margin: 0;
+            }
+        </style>
+        <title>Vanilla Cream - Todo Example</title>
+    </head>
+    <body>
+        <script type="module">
+            import Todo from 'todo'
+
+            document.body.append(
+                Todo.create({
+                    state: [
+                        {label: "Cream", check: true},
+                        {label: "Vanilla", check: true},
+                        {label: "Browser", check: true},
+                        {label: "Like it"}
+                    ]
+                })
+            )
+        </script>
+    </body>
+</html>

@@ -1,0 +1,30 @@
+/*
+Use the same stylessheet for multiple components using an OOP approach
+Text styles defined globally in this file
+Since all text element derived from the Text class
+*/
+span, p, h1, h2, h3 {
+    display: flex;
+    font-family: sans-serif;
+    padding: 20px;
+    margin: 0;
+    color: #FFFFFF;
+}
+
+h1 {
+    display: flex;
+    font-size: 2em;
+    background-color: #123155;
+}
+
+h2 {
+    display: flex;
+    font-size: 1em;
+}
+
+code {
+    display: flex;
+    padding: 20px;
+    color: #CCCCCC;
+    white-space: pre-wrap;
+}

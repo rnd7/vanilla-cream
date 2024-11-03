@@ -1,0 +1,23 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    background-color: #fbdaff;
+    overflow: hidden;
+}
+
+input {
+    font-style: italic;
+}
+
+button {
+    background-color: rgb(255, 242, 255);
+}
+
+button > * {
+    mix-blend-mode: multiply;
+}
+
+.nobg {
+    background: white;
+}

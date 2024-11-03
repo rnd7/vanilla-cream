@@ -1,0 +1,14 @@
+{
+    "description": "Pseudo API Response",
+    "object": {
+        "bool": true,
+        "float": 123.456,
+        "string": "Hello world"
+    },
+    "array": [
+        "Flowers",
+        "Vegetables",
+        "Fruits"
+    ],
+    "nothing": null
+}

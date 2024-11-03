@@ -1,0 +1,18 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1px;
+    max-width: 600px;
+    align-self: center;
+    background-color: rgb(222, 147, 232);
+    border-radius: 6px;
+    margin: 18px;
+    overflow: hidden;
+    border: 1px solid rgb(222, 147, 232);
+}
+vc-component-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}

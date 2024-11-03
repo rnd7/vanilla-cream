@@ -1,0 +1,13 @@
+{
+    "name": "@rnd7/vc-examples",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "npx http-server"
+    },
+    "author": "rnd7",
+    "license": "MIT",
+    "description": "Vanilla Cream - Examples"
+}
+  

@@ -1,0 +1,15 @@
+vc-canvas {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    touch-action: none;
+}
+
+vc-inspector {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    touch-action: none;
+}

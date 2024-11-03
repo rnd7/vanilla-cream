@@ -1,0 +1,15 @@
+{
+  "name": "@rnd7/vc",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node test/index.js"
+  },
+  "author": "rnd7",
+  "license": "MIT",
+  "description": "Vanilla Cream - Minimalist Web Component Framework",
+  "files": [
+    "src/**"
+  ]
+}
