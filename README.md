@@ -9,15 +9,15 @@ This repository contains the module and the examples.
 
 ## Examples
 
-[Minimal Example](example-minimal.html)
+[Minimal Example](https://rnd7.github.io/vc/example-minimal.html)
 
-[Reactive Example](example-reactive.html)
+[Reactive Example](https://rnd7.github.io/vc/example-reactive.html)
 
-[Todo Example](example-todo.html)
+[Todo Example](https://rnd7.github.io/vc/example-todo.html)
 
-[Canvas Example](example-canvas.html)
+[Canvas Example](https://rnd7.github.io/vc/example-canvas.html)
 
-[Detailed Example](example-detailed.html)
+[Detailed Example](https://rnd7.github.io/vc/example-detailed.html)
 
 
 # Exactly, what?
