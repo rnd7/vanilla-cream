@@ -1,6 +1,6 @@
 {
   "name": "@rnd7/vc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
@@ -8,6 +8,10 @@
   },
   "author": "rnd7",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rnd7/vanilla-cream.git"
+  },
   "description": "Vanilla Cream - Minimalist Web Component Framework",
   "files": [
     "src/**"
