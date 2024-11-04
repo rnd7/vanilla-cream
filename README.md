@@ -9,15 +9,15 @@ This repository contains the module and the examples.
 
 ## Examples
 
-[Minimal Example](https://rnd7.github.io/vc/example-minimal.html)
+[Minimal Example](https://rnd7.github.io/vanilla-cream/example-minimal.html)
 
-[Reactive Example](https://rnd7.github.io/vc/example-reactive.html)
+[Reactive Example](https://rnd7.github.io/vanilla-cream/example-reactive.html)
 
-[Todo Example](https://rnd7.github.io/vc/example-todo.html)
+[Todo Example](https://rnd7.github.io/vanilla-cream/example-todo.html)
 
-[Canvas Example](https://rnd7.github.io/vc/example-canvas.html)
+[Canvas Example](https://rnd7.github.io/vanilla-cream/example-canvas.html)
 
-[Detailed Example](https://rnd7.github.io/vc/example-detailed.html)
+[Detailed Example](https://rnd7.github.io/vanilla-cream/example-detailed.html)
 
 
 # Exactly, what?
