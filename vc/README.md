@@ -1,36 +1,49 @@
 # VC - Vanilla Cream Module
-Minimal Web Component Framework
+Minimalist Web Component Framework
 
+**Important Notice:**
+This is experimental technology. If you use this software, it is up to you to assess the risks.
 
+# Import directly from GitHub io
 
-# Installation
-Installation is optional.
-
+```html
+<script type="importmap">
+    {
+        "imports": {
+            "@rnd7/vc": "https://rnd7.github.io/vanilla-cream/vc/src/index.js"
+        }
+    }
+</script> 
 ```
-npm -i @rnd7/vc
-```
-
-# Obtain source code
-Git clone this repo.
-
-```
-git clone https://github.com/rnd7/vc.git
-```
-
-# Import
-In many cases you want to import the package using a package manager
-
-When installed via package manager using the module scope and name
 ```javascript
 import Component from '@rnd7/vc'
 ```
 
+
+# Using a package manager
+This is optional. You may prefer this if you want to serve the sources yourself.
+
+```
+npm -i @rnd7/vc
+```
+```javascript
+import Component from '@rnd7/vc'
+```
+
+# Import from CDN
 In other cases you maybe want to use a CDN
 ```javascript
 import Component from "https://esm.sh/@rnd7/vc"
 ```
 
-Import Map. A standard to resolve modules on the browser side. This makes it possible to import the module using its scope and name.
+
+# Obtain source code
+Git clone this repo and import the module.
+
+```
+git clone https://github.com/rnd7/vanilla-cream.git
+```
+
 ```html
 <script type="importmap">
     {
@@ -39,6 +52,10 @@ Import Map. A standard to resolve modules on the browser side. This makes it pos
         }
     }
 </script> 
+```
+
+```javascript
+import Component from '@rnd7/vc'
 ```
 
 If you still want to import the module using the path you can also directly import from source after cloning the repo.
@@ -82,8 +99,8 @@ class MyComponent extends Component {
 document.body.append(MyComponent.create())
 ```
 
-The initialize method is invoked on animation frame after the component is added to the DOM.
-You cannot use the new keyword. The constructor is invoked by the browser.
+You cannot use the new keyword to instantiate the component. Instead use the static create method. The constructor is invoked by the browser. The initialize method is invoked on animation frame after the component is added to the DOM.
+
 
 
 The resulting DOM tree looks like this. You can style, query and modify the component just like a regular HTML element. You can also access all public accessors and methods as you would do with regular class instance.
@@ -140,7 +157,8 @@ To activate automated state management pass options with a interceptState proper
 
 ## More Examples
 Have a look at the examples in the root directory of this repository.
-[Repository](../README.md)
+
+[Repository root](../README.md)
 
 # Files
 
