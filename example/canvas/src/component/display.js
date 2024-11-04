@@ -6,7 +6,6 @@ export default class Display extends Component {
 
     async initialize() {
         await this.appendStylesheet(import.meta.resolve('./display.css'))
-        await super.initialize()
     }
 
     set label(value) {
@@ -18,8 +17,8 @@ export default class Display extends Component {
         return this.#label
     }
 
-    updateState(state) {
-        if(super.updateState(state)) this.addToRenderQueue(this.bind(this.#render))
+    stateChange() {
+        this.addToRenderQueue(this.bind(this.#render))
     }
 
     #render() {

@@ -27,9 +27,10 @@
                 font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 font-weight: bold;
                 font-size: 4em;
+                text-align: center;
             }
         </style>
-        <title>Vanilla Cream - Minimal Example</title>
+        <title>Vanilla Cream - GitHub Import Example</title>
     </head>
     <body>
         <script type="module">
@@ -39,7 +40,6 @@
             class MyComponent extends Component {
                 async initialize() {
                     this.shadowRoot.textContent = "Imported from GitHub"
-                    super.initialize()
                 }
             }
 

@@ -3,10 +3,12 @@ import camelToKebab from "./utility/camel-to-kebab.js"
 import defer from "./utility/defer.js"
 import { FETCH, MODIFY_STATE, REMOVE_STATE, REPLACE_STATE } from "./event.js"
 import handleStateEvent from "./handle-state-event.js"
+import { RESIZE } from "./event.js"
+import { STATE_CHANGE } from "./event.js"
+import traverseStateMap from "./utility/traverse-state-map.js"
 
 export default class Component extends HTMLElement {
 
-    static RESIZE = "resize"
     static prefix = "vc"
     static register = new Set()
     static domParser = new DOMParser()
@@ -48,6 +50,7 @@ export default class Component extends HTMLElement {
     #suffix
     #binding
     #state
+    #stateMap
     #renderQueue = new Set()
     #listeners = []
     #animationFrame
@@ -63,12 +66,14 @@ export default class Component extends HTMLElement {
     constructor({
         resizeObserver = false,
         interceptFetch = false,
-        interceptState = false
+        interceptState = false,
+        stateMap = {}
     } = {}) {
         super()
         this.#binding = new Binding(this)
         this.#interceptFetch = interceptFetch
         this.#interceptState = interceptState
+        this.#stateMap = stateMap || {}
         this.attachShadow({ mode: 'open' })
         if (resizeObserver) {
             this.#resizeObserver = new ResizeObserver(this.bind(this.#onResize))
@@ -84,15 +89,28 @@ export default class Component extends HTMLElement {
 
     connectedCallback() {
         requestAnimationFrame(()=>{
-            this.initialize()
+            this.#initialize()
         })
     }
 
     async initialize() {
+        // implement in subclass
+    }
+
+    async #initialize() {
         if (this.#initialized) return
         this.intitialized = true
+        await this.initialize()
         if (this.#resizeTriggered) this.resize()
         if (this.#renderTriggered) this.#triggerRender()
+    }
+
+    get stateMap() {
+        return this.#stateMap
+    }
+
+    set stateMap(value) {
+        this.#stateMap = value
     }
 
     get width() {
@@ -199,15 +217,29 @@ export default class Component extends HTMLElement {
     }
 
     updateState(state) {
-        if (state === this.#state) return false
-        this.#state = state
-        return true
+        const changed = (state !== this.#state)
+        if (changed) {
+            this.#state = state
+            this.stateChange()
+        }
+        traverseStateMap(this.stateMap, state)
+        return changed
     }
 
     modifyState(event) {
         event.stopPropagation()
         const state = handleStateEvent(event)
         defer(this.updateState(state))
+    }
+
+    stateChange() {
+        // Implement in subclass or listen to event
+        this.dispatchEvent(
+            new CustomEvent(STATE_CHANGE, {
+                composed: true,
+                detail: {component: this}
+            })
+        )
     }
 
     /* Dynamic loading */
@@ -262,7 +294,7 @@ export default class Component extends HTMLElement {
     resize() {
         // implement in subclass or listen to event
         this.dispatchEvent(
-            new CustomEvent(Component.RESIZE, {
+            new CustomEvent(RESIZE, {
                 composed: true,
                 detail: {component: this, width: this.#width, height: this.#height}
             })

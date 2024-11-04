@@ -22,7 +22,6 @@ export default class Input extends Component {
         this.shadowRoot.append(this.#labelEl)
         this.#inputEl.id = "input"
         this.shadowRoot.append(this.#inputEl)
-        await super.initialize()
     }
 
     set label(value) {

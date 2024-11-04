@@ -8,6 +8,15 @@ export default class Inspector extends Component {
     #yComp = Display.create({options: {label: "y"}})
     #downComp = Display.create({options: {label: "pressed"}})
 
+    constructor() {
+        super()
+        this.stateMap = {
+            x: this.#xComp,
+            y: this.#yComp,
+            down: this.#downComp
+        }
+    }
+
     async initialize() {
         await this.appendStylesheet(import.meta.resolve('./inspector.css'))
         this.shadowRoot.append(this.#title)
@@ -15,15 +24,5 @@ export default class Inspector extends Component {
         this.shadowRoot.append(this.#xComp)
         this.shadowRoot.append(this.#yComp)
         this.shadowRoot.append(this.#downComp)
-        await super.initialize()
     }
-
-    updateState(state) {
-        super.updateState(state)
-        this.#xComp.updateState(this.state.x)
-        this.#yComp.updateState(this.state.y)
-        this.#downComp.updateState(this.state.down)
-    }
-
-
 }

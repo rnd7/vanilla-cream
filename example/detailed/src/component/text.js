@@ -24,7 +24,6 @@ export default class Text extends Component {
         this.#textElement = document.createElement(this.#tag)
         this.shadowRoot.append(this.#textElement)
         this.addToRenderQueue(this.bind(this.#render))
-        await super.initialize()
     }
 
     set content(value) {

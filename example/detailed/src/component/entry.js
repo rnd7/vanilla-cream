@@ -19,6 +19,9 @@ export default class Entry extends Component {
 
     constructor() {
         super()
+        this.stateMap = {
+            title: (state) => {this.#inputEl.value = state}
+        }
     }
 
     async initialize() {
@@ -27,7 +30,6 @@ export default class Entry extends Component {
         this.shadowRoot.append(this.#removeButtonEl)
         this.on(this.#inputEl, Input.CHANGE, this.#onInputChange)
         this.on(this.#removeButtonEl, "pointerup", this.#onRemovePointerUp)
-        await super.initialize()
     }
 
     #onRemovePointerUp(event) {
@@ -38,11 +40,5 @@ export default class Entry extends Component {
     #onInputChange(event) {
         event.stopPropagation()
         this.replaceState({...this.state, title: event.detail})
-    }
-
-    updateState(state) {
-        if (super.updateState(state)) {
-            this.#inputEl.value = this.state?.title
-        }
     }
 }

@@ -13,7 +13,6 @@ export default class TemplateElement extends Component {
         await this.appendStylesheet(TemplateElement.STYLE)
         await this.appendHTML(TemplateElement.TEMPLATE)
         this.addToRenderQueue(this.bind(this.#render))
-        await super.initialize()
     }
 
     #render() {

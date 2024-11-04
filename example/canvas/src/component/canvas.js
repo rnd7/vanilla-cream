@@ -16,11 +16,10 @@ export default class Canvas extends Component {
     async initialize() {
         this.#ctx = this.#cv.getContext('2d')
         this.shadowRoot.append(this.#cv)
-        await super.initialize()
     }
 
-    updateState(state) {
-        if(super.updateState(state)) this.addToRenderQueue(this.bind(this.#render))
+    stateChange() {
+        this.addToRenderQueue(this.bind(this.#render))
     }
 
     resize() {

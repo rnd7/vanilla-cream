@@ -1,4 +1,6 @@
 export const REMOVE_STATE = "remove-state"
 export const REPLACE_STATE = "replace-state"
 export const MODIFY_STATE = "modify-state"
+export const STATE_CHANGE = "state-change"
 export const FETCH = "fetch"
+export const RESIZE = "resize"

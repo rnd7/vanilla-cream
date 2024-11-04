@@ -21,7 +21,6 @@ export default class Heavy extends Component {
         this.#imgEl.src = BASE64_IMAGE
         this.#imgContainer.append(this.#imgEl)
         this.shadowRoot.append(this.#credits)
-        await super.initialize()
     }
 }
 

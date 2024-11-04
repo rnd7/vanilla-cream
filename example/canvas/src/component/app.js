@@ -7,17 +7,19 @@ export default class App extends Component {
     #canvas = Canvas.create()
     #inspector = Inspector.create()
 
+    constructor() {
+        super()
+        this.stateMap = [
+            {
+                instructions: this.#canvas
+            },
+            this.#inspector
+        ]
+    }
+
     async initialize() {
         await this.appendStylesheet(import.meta.resolve('./app.css'))
         this.shadowRoot.append(this.#canvas)
         this.shadowRoot.append(this.#inspector)
-        await super.initialize()
     }
-
-    updateState(state) {
-        super.updateState(state)
-        this.#canvas.updateState(this.state.instructions)
-        this.#inspector.updateState(this.state)
-    }
-
 }

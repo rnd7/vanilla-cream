@@ -11,6 +11,7 @@
     overflow: hidden;
     border: 1px solid rgb(222, 147, 232);
 }
+
 vc-component-list {
     display: flex;
     flex-direction: column;

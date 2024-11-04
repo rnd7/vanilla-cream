@@ -27,7 +27,6 @@ export default class Button extends Component {
         await this.appendStylesheet(Button.STYLE)
         this.shadowRoot.append(this.#buttonEl)
         this.addToRenderQueue(this.bind(this.#render))
-        await super.initialize()
     }
 
     #render() {

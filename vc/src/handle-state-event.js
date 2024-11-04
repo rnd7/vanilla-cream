@@ -1,13 +1,22 @@
 import { REMOVE_STATE, REPLACE_STATE } from "./event.js"
 import findRecursive from "./utility/find-recursive.js"
+import findStateMapReference from "./utility/find-state-map-reference.js"
 import removeFrom from "./utility/remove-from.js"
 import replaceWith from "./utility/replace-with.js"
 
 export default function handleStateEvent(event) {
     const eventPath = event.composedPath()
     const statePath = []
+    let previousEl = null
     for (const el of eventPath) {
-        if (el.state) statePath.push(el.state)
+        if (el.stateMap && previousEl) {
+            const pathFromMap = findStateMapReference(el.stateMap, el.state, previousEl)
+            if(pathFromMap) statePath.push(...pathFromMap.reverse())
+        }
+        if (el.state) {
+            statePath.push(el.state)
+            previousEl = el
+        }
     }
     if (event.detail.reference) {
         const subPath = findRecursive(statePath[0], event.detail.reference)

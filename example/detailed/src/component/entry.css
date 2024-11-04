@@ -9,4 +9,5 @@
 vc-input {
     display: flex;
     flex: 1;
+    min-width: 64px;
 }

@@ -16,7 +16,6 @@ export default class Response extends Component {
         await this.appendStylesheet(Response.STYLE)
         this.shadowRoot.append(this.#headlineEl)
         this.shadowRoot.append(this.#codeElement)
-        await super.initialize()
     }
 
     set body(value) {

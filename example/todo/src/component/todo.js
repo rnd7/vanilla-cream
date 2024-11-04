@@ -22,6 +22,7 @@ export default class Todo extends Component {
         Component base class. The state is modified and updateState is invoked.
         */
         super({interceptState: true})
+        this.stateMap = this.#listComponent
     }
 
     async initialize() {
@@ -37,14 +38,5 @@ export default class Todo extends Component {
         this.on(this.#addEntryButton, "pointerup", (event) => {
             this.replaceState([...this.state, {label:""}])
         })
-        
-        await super.initialize()
     }
-
-    updateState(state) {
-        super.updateState(state)
-        // State is distributed manually
-        this.#listComponent.updateState(this.state)
-    }
-
 }

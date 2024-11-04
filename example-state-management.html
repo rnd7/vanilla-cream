@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content="Example to illustrate the capabilities of the Vanillas Cream WebComponent framework." />
+        <script type="importmap">
+         {
+           "imports": {
+             "@rnd7/vc": "./vc/src/index.js"
+           }
+         }
+        </script> 
+        <style>
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                flex: 1;
+                background-color: #073332;
+            }
+            
+            /* Components are kebab case and prefixed with vc */
+            vc-my-component {
+                display: flex;
+                flex-direction: column;
+                color: #FFFFFF;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 1em;
+            }
+            
+            vc-my-component::part(list) {
+                display: flex;
+                flex-direction: column;
+            }
+
+            vc-my-component::part(nested) {
+                cursor: pointer;
+            }
+        </style>
+        <title>Vanilla Cream - State Management Example</title>
+    </head>
+    <body>
+        <script type="module">
+            import Component, { ComponentList } from '@rnd7/vc'
+
+            let myState = {
+                someProperty: false,
+                nested: {
+                    nestedProperty: "Something"
+                },
+                list: [
+                    {
+                        listItemProperty: "First"
+                    },
+                    {
+                        listItemProperty: "Second"
+                    },
+                    {
+                        listItemProperty: "Third"
+                    }
+                ]
+            }
+
+            class MyComponent extends Component {
+                #label = document.createElement('div')
+                #nestedComponent = NestedComponent.create()
+                #listComponent = ComponentList.create({
+                    options: {
+                        component: ListItem
+                    }
+                })
+
+                constructor() {
+                    super({
+                        interceptState: true, 
+                    })
+                    this.stateMap = { 
+                        nested: { 
+                            nestedProperty: this.#nestedComponent
+                        },
+                        list: this.#listComponent
+                    }
+                }
+
+                async initialize() {
+                    this.setAttribute("exportparts", "list,nested")
+                    this.shadowRoot.append(this.#label)
+                    this.shadowRoot.append(this.#nestedComponent)
+                    this.#nestedComponent.setAttribute("part", "nested")
+                    this.shadowRoot.append(this.#listComponent)
+                    this.#listComponent.setAttribute("part", "list")
+                }
+
+                stateChange() {
+                    this.addToRenderQueue(()=>{
+                        this.#label.textContent = this.state.someProperty
+                    }) 
+                }
+            }
+
+            class NestedComponent extends Component {
+                async initialize() {
+                    this.on(this, "pointerup", ()=>{
+                        // Component level state modification
+                        const newValue = this.state === "Something"? "Anything": "Something"
+                        this.replaceState(newValue)
+                    })
+                }
+
+                stateChange() {
+                    this.addToRenderQueue(()=>{
+                        this.shadowRoot.textContent = this.state
+                    }) 
+                }
+            }
+
+            class ListItem extends Component {
+                stateChange() {
+                    this.addToRenderQueue(()=>{
+                        this.shadowRoot.textContent = this.state.listItemProperty
+                    })
+                }
+            }
+
+            // A Component can optionally be initialized with a state
+            const myComponent = MyComponent.create({state: myState})
+
+            document.body.append(myComponent)
+
+            // External state modification
+
+            // To change the value of someProperty.
+            myState = {...myState, someProperty: true}
+            myComponent.updateState(myState)
+
+            // To change the list replace the array
+            myState.list = myState.list.slice(0,2)
+            myComponent.updateState(myState)
+
+            // To change a list item
+            myState.list[0] = {...myState.list[0], listItemProperty: "First Item"}
+            myComponent.updateState(myState)
+
+            // To change the other list item
+            myState.list[1] = {...myState.list[1], listItemProperty: "Second Item"}
+            myComponent.updateState(myState)
+
+        </script>
+    </body>
+</html>

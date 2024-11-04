@@ -23,7 +23,6 @@ export default class Entry extends Component {
         this.shadowRoot.append(this.#removeButtonElement)
         this.#removeButtonElement.classList.add("nobg")
         this.on(this.#removeButtonElement, "pointerup", this.#onRemovePointerUp)
-        await super.initialize()
     }
 
     #onFocus(event) { 
@@ -38,7 +37,7 @@ export default class Entry extends Component {
 
     set showRemoveButton(value) {
         this.#showRemoveButton = value
-        this.addToRenderQueue(this.bind(this.#render))
+        this.addToRenderQueue(this.bind(this.#renderRemoveButton))
     }
 
     #onCheckButtonPointerUp(event) { 
@@ -56,13 +55,16 @@ export default class Entry extends Component {
         this.replaceState({...this.state, label: this.#inputElement.value})
     }
 
-    updateState(state) {
-        if (super.updateState(state)) this.addToRenderQueue(this.bind(this.#render))
+    stateChange() {
+        this.addToRenderQueue(this.bind(this.#render))
     }
 
     #render() {
         this.#checkButtonElement.textContent = this.state.check ? "🔘":"⚪️"
         this.#inputElement.value = this.state.label
+    }
+
+    #renderRemoveButton() {
         if (this.#showRemoveButton && !this.#removeButtonElement.parentNode) this.shadowRoot.append(this.#removeButtonElement)
         else if (!this.#showRemoveButton && this.#removeButtonElement.parentNode) this.#removeButtonElement.remove()
     }

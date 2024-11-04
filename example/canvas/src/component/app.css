@@ -5,6 +5,8 @@ vc-canvas {
     bottom: 0px;
     left: 0px;
     touch-action: none;
+    min-width: 64px;
+    min-height: 64px;
 }
 
 vc-inspector {

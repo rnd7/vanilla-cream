@@ -28,9 +28,10 @@
                 font-weight: bold;
                 font-size: 1em;
                 cursor: pointer;
+                text-align: center;
             }
         </style>
-        <title>Vanilla Cream - Minimal Example</title>
+        <title>Vanilla Cream - Reactive Example</title>
     </head>
     <body>
         <script type="module">
@@ -47,14 +48,10 @@
                     this.on(this.#headlineElement, "pointerup", (event) => {
                         this.replaceState("Clicked")
                     })
-                    await super.initialize()
                 }
 
-                updateState(state) {
-                    if (super.updateState(state)) {
-                        // only render when state changed
-                        this.addToRenderQueue(this.bind(this.#render))
-                    }
+                stateChange() {
+                    this.addToRenderQueue(this.bind(this.#render))
                 }
 
                 #render() {
@@ -66,7 +63,7 @@
 
             document.body.append(myReactiveComponent)
 
-            myReactiveComponent.updateState("Modified")
+            myReactiveComponent.updateState("Click here")
         </script>
     </body>
 </html>

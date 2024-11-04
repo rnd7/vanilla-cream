@@ -8,14 +8,8 @@ export default class ComponentList extends Component {
     #module
     #component
 
-    constructor() {
-        super()
-    }
-
     async initialize() {
         this.addToRenderQueue(this.bind(this.#render))
-        await super.initialize()
-        
     }
 
     set moduleName(value) {
@@ -54,8 +48,12 @@ export default class ComponentList extends Component {
     }
 
     updateState(state) {
-        if (super.updateState(state)) this.addToRenderQueue(this.bind(this.#render))
+        super.updateState(state)
         updateElementListState(this.shadowRoot, state)
+    }
+
+    stateChange() {
+        this.addToRenderQueue(this.bind(this.#render))
     }
 
     #render() {

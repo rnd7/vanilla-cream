@@ -17,7 +17,6 @@ export default class Toolbar extends Component {
     async initialize() {
         await this.appendStylesheet(Toolbar.STYLE)
         this.shadowRoot.append(this.#container)
-        await super.initialize()
     }
 
     set elements(value) {

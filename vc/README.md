@@ -92,7 +92,6 @@ import Component from '@rnd7/vc'
 class MyComponent extends Component {
     async initialize() {
         this.shadowRoot.textContent = "Hello World"
-        super.initialize()
     }
 }
 
@@ -130,14 +129,10 @@ export default class MyReactiveComponent extends Component {
         this.on(this.#headlineElement, "pointerup", (event) => {
             this.replaceState("Clicked")
         })
-        await super.initialize()
     }
 
-    updateState(state) {
-        if (super.updateState(state)) {
-            // only render when state changed
-            this.addToRenderQueue(this.bind(this.#render))
-        }
+    stateChange() {
+        this.addToRenderQueue(this.bind(this.#render))
     }
 
     #render() {
@@ -149,7 +144,7 @@ const myReactiveComponent = MyReactiveComponent.create({state: "Initial"})
 
 document.body.append(myReactiveComponent)
 
-myReactiveComponent.updateState("Modified")
+myReactiveComponent.updateState("Click here")
 ```
 
 To activate automated state management pass options with a interceptState property to the Component constructor from your Component sub class.
@@ -158,7 +153,126 @@ To activate automated state management pass options with a interceptState proper
 ## More Examples
 Have a look at the examples in the root directory of this repository.
 
-[Repository root](../README.md)
+[Repository root](https://github.com/rnd7/vanilla-cream/README.md)
+
+[GitHub Pages](https://rnd7.github.io/vanilla-cream/README.md)
+
+
+# The state
+In Principal the state can be any JavaScript type. Whether a node has changed is checked on the basis of strict equality. Although external control is also possible, I found it useful when a component is responsible for its own state and the descendants. To invalidate a section of the state, it can be shallow cloned and modified by a component. Subordinate references can be retained. If the node is a primitive, the value may simply be replaced. A ComponentList entry can remove itself by removing its own state.
+Since state changes are propagated using DOM events, automated state management can identify the node in question and apply the changes even to the superordinate nodes.
+
+## Basic example
+
+```javascript
+import Component, { ComponentList } from '@rnd7/vc'
+
+/* 
+A plain JS Object as state is probably the most flexible solution
+*/
+let myState = {
+    someProperty: false,
+    nested: {
+        nestedProperty: "Something"
+    },
+    list: [
+        {
+            listItemProperty: "First"
+        },
+        {
+            listItemProperty: "Second"
+        },
+        {
+            listItemProperty: "Third"
+        }
+    ]
+}
+
+class MyComponent extends Component {
+    #label = document.createElement('div')
+    #nestedComponent = NestedComponent.create()
+    #listComponent = ComponentList.create({
+        options: {
+            component: ListItem
+        }
+    })
+
+    constructor() {
+        super({
+            interceptState: true, 
+        })
+        this.stateMap = { 
+            nested: { 
+                nestedProperty: this.#nestedComponent
+            },
+            list: this.#listComponent
+        }
+    }
+
+    async initialize() {
+        this.shadowRoot.append(this.#label)
+        this.shadowRoot.append(this.#nestedComponent)
+        this.shadowRoot.append(this.#listComponent)
+    }
+
+    stateChange() {
+        this.addToRenderQueue(()=>{
+            this.#label.textContent = this.state.someProperty
+        }) 
+    }
+}
+
+class NestedComponent extends Component {
+    async initialize() {
+        this.on(this, "pointerup", ()=>{
+            // Component level state modification
+            const newValue = this.state === "Something"? "Anything": "Something"
+            this.replaceState(newValue)
+        })
+    }
+
+    stateChange() {
+        this.addToRenderQueue(()=>{
+            this.shadowRoot.textContent = this.state
+        }) 
+    }
+}
+
+class ListItem extends Component {
+    stateChange() {
+        this.addToRenderQueue(()=>{
+            this.shadowRoot.textContent = this.state.listItemProperty
+        })
+    }
+}
+
+// A Component can optionally be initialized with a state
+const myComponent = MyComponent.create({state: myState})
+
+document.body.append(myComponent)
+
+// External state modification
+
+// To change the value of someProperty.
+myState = {...myState, someProperty: true}
+myComponent.updateState(myState)
+
+// To change the list replace the array
+myState.list = myState.list.slice(0,2)
+myComponent.updateState(myState)
+
+// To change a list item
+myState.list[0] = {...myState.list[0], listItemProperty: "First Item"}
+myComponent.updateState(myState)
+
+// To change the other list item
+myState.list[1] = {...myState.list[1], listItemProperty: "Second Item"}
+myComponent.updateState(myState)
+
+```
+
+The interceptState option passed to the constructor turns on automatic state event handling. The stateMap is used to map the state to subordinate components. It is quite flexible use an array if you want to propagate the same state node to multiple entities. You can register Component instances or functions.
+
 
 # Files
 

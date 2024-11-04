@@ -39,6 +39,10 @@ export default class Example extends Component {
     */
     constructor() {
         super()
+        this.stateMap = {
+            title: (state) => { this.#titleEl.content = state },
+            entries: (state) => { if (this.#listComp) this.#listComp.updateState(state) }
+        }
     }
 
     async initialize() {
@@ -94,23 +98,10 @@ export default class Example extends Component {
                 options: {
                     body,
                     url 
-
                 }
 
             })
             this.shadowRoot.append(apiCallElement)
         })
-
-        await super.initialize()
     }
-
-    updateState(state) {
-        if (super.updateState(state)) {
-            /* only invoked if the local state reference is changed */
-            this.#titleEl.content = this.state.title
-        }
-        /* Components are responsible to propagate the state to nested Components */
-        if (this.#listComp) this.#listComp.updateState(this.state?.entries)
-    }
-
 }
