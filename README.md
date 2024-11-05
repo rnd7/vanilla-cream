@@ -20,7 +20,7 @@ A detailed description and instructions for use can be found in the module subdi
 
 [Detailed Example](https://rnd7.github.io/vanilla-cream/example-detailed.html)
 
-[Performance Test](https://rnd7.github.io/vanilla-cream/example-performane-test.html)
+[Performance Test](https://rnd7.github.io/vanilla-cream/example-performance-test.html)
 
 [Stress Test](https://rnd7.github.io/vanilla-cream/example-stress-test.html)
 
