@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content="Example to illustrate the capabilities of the Vanillas Cream WebComponent framework." />
+        <script type="importmap">
+         {
+           "imports": {
+             "@rnd7/vc": "./vc/src/index.js"
+           }
+         }
+        </script> 
+        <style>
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                flex: 1;
+                background-color: #073332;
+            }
+            
+            /* Components are kebab case and prefixed with vc */
+            vc-host-component {
+                display: flex;
+                flex-direction: column;
+                color: #FFFFFF;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 1em;
+            }
+            
+            vc-host-component::part(list) {
+                display: flex;
+                flex-direction: column;
+            }
+        </style>
+        <title>Vanilla Cream - Stress Test Example</title>
+    </head>
+    <body>
+        <script type="module">
+            import Component, { ComponentList } from '@rnd7/vc'
+
+            let state = {
+                list: [
+                   
+                ]
+            }
+
+            class HostComponent extends Component {
+                #title = document.createElement('div')
+                #label = document.createElement('div')
+                #ops = 0
+                #count = 0
+                #items = 0
+                #time = 0
+                #listComponent = ComponentList.create({
+                    options: {
+                        component: ListItem
+                    }
+                })
+
+                constructor() {
+                    super()
+                    this.stateMap = { 
+                        list: this.#listComponent
+                    }
+                }
+
+                async initialize() {
+                    this.setAttribute("exportparts", "list")
+                    this.#title.textContent = "VC Stress Test. Click to toggle pause."
+                    this.shadowRoot.append(this.#title)
+                    this.shadowRoot.append(this.#label)
+                    this.shadowRoot.append(this.#listComponent)
+                    this.#listComponent.setAttribute("part", "list")
+                }
+
+                set ops(value) {
+                    this.#ops = value
+                    this.addToRenderQueue(this.bind(this.#render))
+                }
+
+                set count(value) {
+                    this.#count = value
+                    this.addToRenderQueue(this.bind(this.#render))
+                }
+
+                set items(value) {
+                    this.#items = value
+                    this.addToRenderQueue(this.bind(this.#render))
+                }
+
+                set time(value) {
+                    this.#time = value
+                    this.addToRenderQueue(this.bind(this.#render))
+                }
+
+                #render() {
+                    this.#label.textContent = `${this.#count} operations | ${this.#items} elements | ${this.#time | 0} seconds | ${this.#ops | 0} operations per second`
+                }
+            }
+
+            class ListItem extends Component {
+                stateChange() {
+                    this.addToRenderQueue(()=>{
+                        this.shadowRoot.textContent = this.state?.uuid
+                    })
+                }
+            }
+
+            const hostComponent = HostComponent.create({state})
+
+            document.body.append(hostComponent)
+
+            const max = 1e4
+            let count = 0
+            let time = 0
+            let last
+            
+            let paused = true
+            function togglePause() {
+                paused = !paused
+                last = Date.now()
+                if (!paused) loop()
+            }
+
+            function loop() {
+                const now = Date.now()
+                const len = state.list.length
+                const prop = len / max
+                const rand = Math.random()
+                let remove = false
+                const pos = (Math.random() * len) | 0
+
+                if (prop + rand > 1) {
+                    remove = true
+                }
+
+                if (remove) {
+                    state.list = state.list.toSpliced(pos, 1)
+                } else {
+                    state.list = state.list.toSpliced(
+                        pos, 
+                        0,
+                        {
+                            uuid: crypto.randomUUID()
+                        }
+                    )
+                }
+                hostComponent.updateState(state)
+                hostComponent.count = count
+                hostComponent.items = state.list.length
+                count++
+                if (last) {
+                    time += now - last
+                    hostComponent.time = time / 1000
+                    hostComponent.ops = count / (time / 1000) 
+                }
+                last = now
+                
+                if (!paused) setTimeout(loop, 0)
+            }
+            togglePause()
+
+            document.body.addEventListener("pointerup", togglePause)
+            
+
+        </script>
+    </body>
+</html>

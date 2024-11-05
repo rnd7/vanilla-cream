@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content="Example to illustrate the capabilities of the Vanillas Cream WebComponent framework." />
+        <script type="importmap">
+         {
+           "imports": {
+             "@rnd7/vc": "./vc/src/index.js"
+           }
+         }
+        </script> 
+        <style>
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: flex;
+                flex: 1;
+                background-color: #073332;
+            }
+            
+            /* Components are kebab case and prefixed with vc */
+            vc-host-component {
+                display: flex;
+                flex-direction: column;
+                color: #FFFFFF;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 1em;
+            }
+            
+            vc-host-component::part(list) {
+                display: flex;
+                flex-direction: column;
+            }
+        </style>
+        <title>Vanilla Cream - Stress Test Example</title>
+    </head>
+    <body>
+        <script type="module">
+            import Component, { ComponentList } from '@rnd7/vc'
+
+            let state = {
+                list: []
+            }
+
+            class HostComponent extends Component {
+                #title = document.createElement('div')
+                #label = document.createElement('div')
+                #items = 0
+                #time = 0
+                #listComponent = ComponentList.create({
+                    options: {
+                        component: ListItem
+                    }
+                })
+
+                constructor() {
+                    super()
+                    this.stateMap = { 
+                        list: this.#listComponent
+                    }
+                }
+
+                async initialize() {
+                    this.setAttribute("exportparts", "list")
+                    this.#title.textContent = "VC Performance Test. Click to run."
+                    this.shadowRoot.append(this.#title)
+                    this.shadowRoot.append(this.#label)
+                    this.shadowRoot.append(this.#listComponent)
+                    this.#listComponent.setAttribute("part", "list")
+                }
+
+                set items(value) {
+                    this.#items = value
+                    this.addToRenderQueue(this.bind(this.#render))
+                }
+
+                set time(value) {
+                    this.#time = value
+                    this.addToRenderQueue(this.bind(this.#render))
+                }
+
+                get listChildren() {
+                    return this.#listComponent.childElementCount
+                }
+
+                #render() {
+                    this.#label.textContent = `${this.#items} elements | ${this.#time.toPrecision(3)} seconds | ${(this.#items/this.#time) | 0} items per second`
+                }
+            }
+
+            class ListItem extends Component {
+                async initialize() {
+                    // invoked on animation frame after component is added to DOM
+                    incrementInitializeCounter()
+                }
+                stateChange() {
+                    this.addToRenderQueue(()=>{
+                        this.shadowRoot.textContent = this.state?.uuid
+                    })
+                }
+            }
+
+            const hostComponent = HostComponent.create({state})
+
+            document.body.append(hostComponent)
+
+            const items = 1e4
+            let startTime = 0
+            let endTime = 0
+            let initialized = 0
+            
+            function incrementInitializeCounter() {
+                if (++initialized >= items) {
+                    endTime = Date.now()
+                    hostComponent.items = items
+                    hostComponent.time = (endTime-startTime) / 1000
+                }
+            }   
+           
+            async function run() {
+                
+                document.body.removeEventListener("pointerup", run)
+                // the time needed to assemble the array is not included
+                const array = []
+                for (let i = 0; i<items; i++) {
+                    array.push({uuid: crypto.randomUUID()})
+                }
+                state.list = array
+                // start measuring
+                startTime = Date.now()
+                // adding the items to the DOM
+                hostComponent.updateState(state)
+            }
+
+            document.body.addEventListener("pointerup", run)
+            
+
+        </script>
+    </body>
+</html>
