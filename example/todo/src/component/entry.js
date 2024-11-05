@@ -20,9 +20,12 @@ export default class Entry extends Component {
         this.on(this, "pointerover", this.#onFocus)
         this.on(this, "pointerleave", this.#onBlur)
         this.#removeButtonElement.textContent = "✖️"
+        this.#removeButtonElement.classList.add("blend")
         this.shadowRoot.append(this.#removeButtonElement)
         this.#removeButtonElement.classList.add("nobg")
+        this.#renderRemoveButton()
         this.on(this.#removeButtonElement, "pointerup", this.#onRemovePointerUp)
+        if (this === this.parentNode.lastElementChild) this.#inputElement.focus()
     }
 
     #onFocus(event) { 
@@ -60,8 +63,14 @@ export default class Entry extends Component {
     }
 
     #render() {
-        this.#checkButtonElement.textContent = this.state.check ? "🔘":"⚪️"
         this.#inputElement.value = this.state.label
+        if (this.state.check) {
+            this.#checkButtonElement.textContent = "🔘"
+            this.#inputElement.classList.add("done")
+        } else {
+            this.#checkButtonElement.textContent = "⚪️"
+            this.#inputElement.classList.remove("done")
+        }
     }
 
     #renderRemoveButton() {
